@@ -11,14 +11,14 @@
     </div>
 <h4>
 {% if items %}
-<div class=shop1 style="width: 100%;  height: 1000px; padding: 50px;  margin: 20px;">
+<div class=shop1 style="width: 100%;  height: 1100px; padding: 50px;  margin: 20px;">
     <div class="row">
     	{% for item in items %}
         <div style="color:black;font-size: 20px;margin: 20px;">
         <img src="{{ item.product.image.url }}" height="200px" width="300px" style="margin-bottom: 20px; padding-left: 25px" /> 
         <center><div style="margin-left:30px">
           <div>
-          	<a href="#"  style="color:blue">{{item.product.title}}</a>
+          	<a href="{% url 'shop-item' item.product.pk %}"  style="color:blue">{{item.product.title}}</a>
           </div><br>
           Price : {{item.product.final_value}}<br></br>
           Category : {{item.product.category}}<br></br>
@@ -31,7 +31,7 @@
         </div>
     {% endfor %}
     </div>
-    <div class=shop1 style="width: 100%;  height: 300px; padding: 30px;  margin: 5px;">
+    <div class=shop1 style="width: 100%;  height: 100px; padding: 30px;  margin: 5px;">
       <div class="pagination" style="width: 100%;  height: 60px;">
       
       {% if items.has_previous %}
