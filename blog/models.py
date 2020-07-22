@@ -39,6 +39,7 @@ class Post(models.Model):
     date_added = models.DateTimeField(default=timezone.now)
     starttime = models.DateTimeField(default=(datetime.now()+timedelta(days=1)))
     endtime = models.DateTimeField(default=(datetime.now()+timedelta(days=1)))
+    is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     is_exp = models.BooleanField(default=False)
     is_paid = models.BooleanField(default=False)
@@ -50,24 +51,25 @@ class Post(models.Model):
     final_value = models.IntegerField(blank=True, null=True)
 
     def resolve(self):
-        now = datetime.now(timezone.utc)
-        if self.starttime<=now and now<=self.endtime:      
-            self.is_active=True
-            self.is_exp=False
-            self.save()
-            # If expired
-        if self.is_active:
-            
-            if self.has_expired():
-                # Define winner
-                
-                highest_bid = Bid.objects.filter(auction=self).order_by('-amount').first()
-                if highest_bid:
-                    self.winner = highest_bid.bidder
-                    self.final_value = highest_bid.amount
-                self.is_active = False
-                self.is_exp=True
+        if self.is_verified:
+            now = datetime.now(timezone.utc)
+            if self.starttime<=now and now<=self.endtime:      
+                self.is_active=True
+                self.is_exp=False
                 self.save()
+                # If expired
+            if self.is_active:
+                
+                if self.has_expired():
+                    # Define winner
+                    
+                    highest_bid = Bid.objects.filter(auction=self).order_by('-amount').first()
+                    if highest_bid:
+                        self.winner = highest_bid.bidder
+                        self.final_value = highest_bid.amount
+                    self.is_active = False
+                    self.is_exp=True
+                    self.save()
         
     def ispaid(self):
         self.is_paid = True

@@ -260,7 +260,7 @@ def auctions(request):
 	posts = Post.objects.all().order_by('-date_added')
 	for a in posts:
 		a.resolve()
-	latest_auction_list = posts.filter(is_exp=True).order_by('-date_added')
+	latest_auction_list = posts.filter(is_verified=True).filter(is_exp=True).order_by('-date_added')
 	paginator = Paginator(latest_auction_list,6)
 	page = request.GET.get('page')
 	latest_auction_list = paginator.get_page(page)
@@ -273,7 +273,7 @@ def shop(request):
 	auction_list = Post.objects.all()
 	for a in auction_list:
 		a.resolve()
-	latest_auction_list = auction_list.filter(is_active=True).order_by('-date_added')
+	latest_auction_list = auction_list.filter(is_verified=True).filter(is_active=True).order_by('-date_added')
 	paginator = Paginator(latest_auction_list,6)
 	page = request.GET.get('page')
 	latest_auction_list = paginator.get_page(page)
